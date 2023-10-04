@@ -8,7 +8,10 @@ const {
   deleteProductHandler,
 } = require("../controller/products.controller");
 
-const { uploadProductImages, imageProcessing } = require("../images/image.processing");
+const {
+  uploadProductImages,
+  imageProcessing,
+} = require("../images/image.processing");
 
 const {
   getSpecificProductValidator,
@@ -17,28 +20,41 @@ const {
   createProductValidator,
 } = require("../validator/products.validator");
 
-const { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } = require("../endpoints");
+const {
+  CREATE_PRODUCT,
+  UPDATE_PRODUCT,
+  DELETE_PRODUCT,
+} = require("../endpoints");
 
-const { isAuthorized } = require("../../../common/middleware/authorization.middleware");
+const {
+  isAuthorized,
+} = require("../../../common/middleware/authorization.middleware");
 
-const reviewsRoutes = require('../../reviews/routes/reviews.routes');
+const reviewsRoutes = require("../../reviews/routes/reviews.routes");
 
-router.use('/:productId/reviews', reviewsRoutes);
+router.use("/:productId/reviews", reviewsRoutes);
 
-router
-  .route(`/`)
-  .get(getAllProductsHandler)
-  .post(
-    isAuthorized(CREATE_PRODUCT),
-    uploadProductImages,
-    imageProcessing,
-    createProductValidator,
-    createProductHandler
-  );
+router.route(`/`).get(getAllProductsHandler).post(
+  // isAuthorized(CREATE_PRODUCT),
+  uploadProductImages,
+  imageProcessing,
+  createProductValidator,
+  createProductHandler
+);
 router
   .route(`/:id`)
   .get(getSpecificProductValidator, getSpecificProductHandler)
-  .put(isAuthorized(UPDATE_PRODUCT), uploadProductImages, imageProcessing, updateProductValidator, updateProductHandler)
-  .delete(isAuthorized(DELETE_PRODUCT), deleteProductValidator, deleteProductHandler);
+  .put(
+    // isAuthorized(UPDATE_PRODUCT),
+    uploadProductImages,
+    imageProcessing,
+    updateProductValidator,
+    updateProductHandler
+  )
+  .delete(
+    isAuthorized(DELETE_PRODUCT),
+    deleteProductValidator,
+    deleteProductHandler
+  );
 
 module.exports = router;

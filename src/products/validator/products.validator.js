@@ -54,8 +54,8 @@ exports.createProductValidator = [
     ),
   check(`subcategories`)
     .optional()
-    .isArray()
-    .withMessage(`Subcategories must be an array of strings`)
+    // .isArray()
+    // .withMessage(`Subcategories must be an array of strings`)
     .custom((value) =>
       Subcategory.find({ _id: { $exists: true, $in: value } }).then((subcategories) => {
         if (!subcategories) return Promise.reject(new Error(`Subcategory/ies not found`));
@@ -145,8 +145,8 @@ exports.updateProductValidator = [
     ),
   check(`subcategories`)
     .optional()
-    .isArray()
-    .withMessage(`Subcategories must be an array of strings`)
+    // .isArray()
+    // .withMessage(`Subcategories must be an array of strings`)
     .custom((value) =>
       Subcategory.find({ _id: { $exists: true, $in: value } }).then((subcategories) => {
         if (!subcategories) return Promise.reject(new Error(`Subcategory/ies not found`));

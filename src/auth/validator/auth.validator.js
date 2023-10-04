@@ -28,7 +28,12 @@ exports.signupValidator = [
     .withMessage("Invalid phone number")
     .custom((value) => {
       User.findOne({ phone: value }).then((user) => {
-        if (user) return Promise.reject(new Error("This phone number already associated with another account"));
+        if (user)
+          return Promise.reject(
+            new Error(
+              "This phone number already associated with another account"
+            )
+          );
         return true;
       });
     }),
@@ -42,7 +47,9 @@ exports.signupValidator = [
     .withMessage("Password confirmation is required")
     .custom((value, { req }) => {
       if (value !== req.body.password) {
-        return Promise.reject(new Error("Password and confirmation does not match"));
+        return Promise.reject(
+          new Error("Password and confirmation does not match")
+        );
       }
       return true;
     }),
@@ -57,7 +64,8 @@ exports.loginValidator = [
     .withMessage(`Invalid email address`)
     .custom(async (value) => {
       const user = await User.findOne({ email: value });
-      if (!user) return Promise.reject(new Error("Email and password does not match"));
+      if (!user)
+        return Promise.reject(new Error("Email and password does not match"));
       return true;
     }),
   check("password")
@@ -69,15 +77,26 @@ exports.loginValidator = [
 ];
 
 exports.forgotPasswordValidator = [
-  check("email").notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email address').custom((value) => User.findOne({email: value}).then((user) => {
-    if (!user) Promise.reject(new Error('No such email, try to signup'))
-    return true;
-  })),
-  validatorMiddleware
+  check("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Invalid email address")
+    .custom((value) =>
+      User.findOne({ email: value }).then((user) => {
+        if (!user) Promise.reject(new Error("No such email, try to signup"));
+        return true;
+      })
+    ),
+  validatorMiddleware,
 ];
 
 exports.verifyResetCodeValidator = [
-  check('resetCode').notEmpty().withMessage('resetCode is required').isLength({min: 6, max: 6}).withMessage('Invalid reset code'),
+  check("resetCode")
+    .notEmpty()
+    .withMessage("resetCode is required")
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Invalid reset code"),
   validatorMiddleware,
 ];
 
@@ -87,12 +106,21 @@ exports.resetPasswordValidator = [
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email address")
-    .custom((value) =>
-      User.findOne({ email: value, resetCodeVerified: { $gt: Date.now() } }).then((user) => {
-        if (!user) Promise.reject(new Error("No such email, try to signup"));
-        return true;
-      })
-    ),
+    .custom(async (value) => {
+      const user = await User.findOne({
+        email: value,
+        resetCodeVerified: { $gt: Date.now() },
+      });
+
+      console.log("User found:", user); // Log the user object
+
+      if (user) {
+        console.error("User not found:", value);
+        throw new Error("No such email, please sign up");
+      }
+
+      return true;
+    }),
   check("password")
     .notEmpty()
     .withMessage("Password is required")
@@ -103,9 +131,11 @@ exports.resetPasswordValidator = [
     .withMessage("Password confirmation is required")
     .custom((value, { req }) => {
       if (value !== req.body.password) {
-        return Promise.reject(new Error("Password and confirmation does not match"));
+        return Promise.reject(
+          new Error("Password and confirmation do not match")
+        );
       }
       return true;
     }),
-    validatorMiddleware
+  validatorMiddleware,
 ];
