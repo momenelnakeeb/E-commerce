@@ -22,7 +22,7 @@
 ![Static Badge](https://img.shields.io/badge/8.48.0-eslint-8A2BE2)
 ![Static Badge](https://img.shields.io/badge/13.6.0-stripe-blue)
 
-## $ git tree
+## $ git tree(bash command: git tree) that's inside the directory of the project
 
 ```
 common
