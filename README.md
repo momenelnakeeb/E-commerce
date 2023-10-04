@@ -24,10 +24,7 @@
 
 ## $ git tree
 
-.eslintrc.js
-.gitignore
-README.md
-app.js
+```
 common
    |-- middleware
    |   |-- authorization.middleware.js
@@ -195,7 +192,13 @@ uploads
    |   |-- prodcut-1694036278614.jpeg
    |-- users
    |   |-- user-avatar-1694036278614.jpeg
+
+.eslintrc.js
+.gitignore
+README.md
+app.js
 yarn.lock
+```
 
 
 ## Tabel of content
